@@ -1,0 +1,45 @@
+# 1
+select c.idClient, c.FirstName, LastName from client c
+    join application a on c.idClient = a.Client_idClient
+    join department d on d.idDepartment = c.Department_idDepartment
+    where Currency = 'Dollar' and DepartmentCity = 'Lviv'
+    order by Sum desc
+    limit 1;
+
+
+# 2
+select idClient, count(*) CreditNumber from client c
+    join application a on c.idClient = a.Client_idClient
+    group by idClient
+    order by count(idClient) desc
+    limit 1;
+
+
+select * from client c
+    join application a on c.idClient = a.Client_idClient
+    group by idClient
+    order by count(idClient) desc
+    limit 1;
+
+# 3
+select c.idClient, c.FirstName, c.Department_idDepartment Department from client c
+    where c.City = (select c.City from client c
+        join application a on c.idClient = a.Client_idClient
+        group by idClient
+        order by count(idClient) desc
+        limit 1);
+
+
+# 4
+select trim(avg(Sum)) + 0, count(*) from client c
+    join application a on c.idClient = a.Client_idClient
+    join department d on d.idDepartment = c.Department_idDepartment
+    where Currency = 'Dollar'
+    group by DepartmentCity
+    having DepartmentCity = 'Lviv';
+
+
+# 5
+select idClient, FirstName, max(Sum) from client c
+    join application a on c.idClient = a.Client_idClient
+    group by idClient, FirstName;
